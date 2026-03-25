@@ -107,3 +107,39 @@ python3.11 test_emotion_detection.py
 Ran 1 test in 0.319s
 
 OK
+
+#6a_server
+from flask import Flask, request
+from EmotionDetection.emotion_detection import emotion_detector
+
+app = Flask(__name__)
+
+
+@app.route("/emotionDetector")
+def sent_analyzer():
+    text_to_analyze = request.args.get("textToAnalyze", "")
+    response = emotion_detector(text_to_analyze)
+
+    anger = response["anger"]
+    disgust = response["disgust"]
+    fear = response["fear"]
+    joy = response["joy"]
+    sadness = response["sadness"]
+    dominant_emotion = response["dominant_emotion"]
+
+    return (
+        f"For the given statement, the system response is "
+        f"'anger': {anger}, "
+        f"'disgust': {disgust}, "
+        f"'fear': {fear}, "
+        f"'joy': {joy} and "
+        f"'sadness': {sadness}. "
+        f"The dominant emotion is {dominant_emotion}."
+    )
+
+
+if __name__ == "__main__":
+    app.run(host="localhost", port=5000)
+
+#6b_deployment_test.png
+
